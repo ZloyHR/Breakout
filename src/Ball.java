@@ -1,24 +1,25 @@
+import acm.graphics.GImage;
 import acm.graphics.GObject;
 import acm.graphics.GOval;
 
 import java.awt.*;
 
-public class Ball extends GOval {
+public class Ball extends GImage {
     private double velocityX;
     private double velocityY;
 
     private double startX;
     private double startY;
 
-    public Ball(double v, double v1) {
-        super(v, v1);
+    private int cnt = 1;
+
+    public Ball(String s) {
+        super(s);
         startX = startY = 0;
     }
 
-    public Ball(double v, double v1, double v2, double v3) {
-        super(v, v1, v2, v3);
-        setFilled(true);
-        setFillColor(Color.white);
+    public Ball(String s, double v, double v1) {
+        super(s, v, v1);
         startX = v;
         startY = v1;
     }
@@ -26,6 +27,9 @@ public class Ball extends GOval {
     /** Move ball by it's velocity*/
     public void moveByVelocity() {
         move(velocityX, velocityY);
+        setImage("img/Blade" + cnt + ".png");
+        cnt++;
+        if(cnt == 5)cnt = 1;
     }
 
     /**Returns xVelocity of ball*/

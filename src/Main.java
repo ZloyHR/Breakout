@@ -3,6 +3,7 @@ import acm.graphics.GObject;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
 import acm.util.RandomGenerator;
+import acm.util.SoundClip;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -114,7 +115,8 @@ public class Main extends GraphicsProgram {
 
         BrickGenerator gen = new Level2();
         brickCount = gen.generate(this.getGCanvas());
-        ball = new Ball((GAME_X2 + GAME_X1)/ 2 - BALL_RADIUS,plat.getY1() - 3 * BALL_RADIUS,BALL_RADIUS,BALL_RADIUS);
+        ball = new Ball("img/Blade1.png",(GAME_X2 + GAME_X1)/ 2 - BALL_RADIUS,plat.getY1() - 3 * BALL_RADIUS);
+        //ball.scale(0.025);
         add(ball);
         ball.reSpawn(5);
 
@@ -161,6 +163,9 @@ public class Main extends GraphicsProgram {
     }
 
     private void removeBrick(GObject brick){
+        SoundClip clip = new SoundClip("fx/woodTouch.wav");
+        clip.setVolume(0.5);
+        clip.play();
         remove(brick);
         brickCount--;
         score.addToValue(100);
@@ -180,7 +185,8 @@ public class Main extends GraphicsProgram {
     }
 
     private boolean isBrick(GObject obj){
-        return obj != back && obj != ball && obj != statisticBox && obj != plat && obj != null;
+        return obj != null && Math.abs(obj.getBounds().getWidth() - BRICK_WIDTH) < 1;
+        //return obj != back && obj != ball && obj != statisticBox && obj != plat && obj != null;
     }
 
 }
