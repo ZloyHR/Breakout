@@ -46,7 +46,7 @@ public class Main extends GraphicsProgram {
     private static final int FRAME_UPDATE = 10;
 
     Ball ball = new Ball(0,520,BALL_RADIUS,BALL_RADIUS);
-    Platform plat = new Platform(PADDLE_WIDTH,PADDLE_HEIGHT);
+    Platform plat = new Platform("img/Plat.png");
 
     /* Method: run() */
     /** Runs the Breakout program. */
@@ -58,7 +58,7 @@ public class Main extends GraphicsProgram {
         HEIGHT = getHeight();
         addMouseListeners();
         add(ball);
-        plat.setLocation(getWidth() / 2 - plat.getWidth() / 2,PADDLE_Y_OFFSET);
+        plat.setLocation(getWidth() / 2 - plat.getWidth() / 2,getHeight() - 3 * plat.getHeight());
         add(plat);
         createBricks();
         while (true){
@@ -72,7 +72,7 @@ public class Main extends GraphicsProgram {
 
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
-        plat.setLocation(mouseEvent.getX(),plat.getY());
+        plat.setLocation(mouseEvent.getX() - plat.getWidth() / 2,plat.getY());
     }
 
     private void createBricks(){
@@ -96,7 +96,7 @@ public class Main extends GraphicsProgram {
             for(double addY = 0;addY <= ball.getBounds().getWidth(); addY += ball.getBounds().getWidth()){
                 GObject elementAt = getElementAt(ball.getX1() + addX, ball.getY1() + addY);
                 if(elementAt == null || elementAt == ball || elementAt == plat)continue;
-                if(ball.checkRectCollision(elementAt)){
+                if(ball.checkRectCollision(elementAt,true)){
                     remove(elementAt);
                     return;
                 }
@@ -108,7 +108,8 @@ public class Main extends GraphicsProgram {
         for(double addX = 0;addX <= ball.getBounds().getWidth(); addX += ball.getBounds().getWidth()){
             for(double addY = 0;addY <= ball.getBounds().getWidth(); addY += ball.getBounds().getWidth()){
                 GObject elementAt = getElementAt(ball.getX1() + addX, ball.getY1() + addY);
-                if(elementAt == plat && ball.checkRectCollision(elementAt)){
+                if(elementAt == plat && ball.checkRectCollision(elementAt,false)){
+                    plat.bounce(ball);
                     return;
                 }
             }

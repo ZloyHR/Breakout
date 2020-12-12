@@ -1,6 +1,8 @@
 import acm.graphics.GObject;
 import acm.graphics.GOval;
 
+import java.awt.*;
+
 public class Ball extends GOval {
     private double velocityX;
     private double velocityY;
@@ -16,7 +18,7 @@ public class Ball extends GOval {
     }
 
     public void moveByVelocity() {
-        move(velocityX,velocityY);
+        move(velocityX, velocityY);
     }
 
     public double getVelocityX() {
@@ -35,55 +37,73 @@ public class Ball extends GOval {
         this.velocityY = velocityY;
     }
 
-    public double getX1(){
-        return  getX();
+    public double getX1() {
+        return getBounds().getX();
     }
 
-    public double getX2(){ return getX() + getWidth(); }
-
-    public double getY1(){ return getY(); }
-
-    public double getY2(){
-        return getY() + getHeight();
+    public double getX2() {
+        return getBounds().getX() + getBounds().getWidth();
     }
 
-    public double getCenterX(){
+    public double getY1() {
+        return getBounds().getY();
+    }
+
+    public double getY2() {
+        return getBounds().getY() + getBounds().getHeight();
+    }
+
+    public double getCenterX() {
         return (getX1() + getX2()) / 2;
     }
 
-    public double getCenterY(){
+    public double getCenterY() {
         return (getY1() + getY2()) / 2;
     }
 
-    /** Returns true if ball under the window
-     *  Returns false if ball collide with window border and change velocity to keep ball inside window
+    public double getVelocity() {
+        return Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+    }
+
+    public void scaleVelocity(double scale) {
+        scale = Math.sqrt(scale);
+        velocityX *= scale;
+        velocityY *= scale;
+    }
+
+    /**
+     * Returns true if ball under the window
+     * Returns false if ball collide with window border and change velocity to keep ball inside window
      */
-    public boolean checkWallCollision(){
-        if(getY2() >= Main.HEIGHT) {
+    public boolean checkWallCollision() {
+        if (getY2() >= Main.HEIGHT) {
             setVelocityY(-getVelocityY());
             return true;
         }
-        if(getX1() <= 0)
+        if (getX1() <= 0)
             setVelocityX(-getVelocityX());
-        if(getY1() <= 0)
+        if (getY1() <= 0)
             setVelocityY(-getVelocityY());
-        if(getX2() >= Main.WIDTH)
+        if (getX2() >= Main.WIDTH)
             setVelocityX(-getVelocityX());
         return false;
 
     }
 
     /**
-     *  Returns false if ball collide with brick and change velocity to jump ball out after brick collision
+     * Returns false if ball collide with brick and change velocity to jump ball out after brick collision
      */
-    public boolean checkRectCollision(GObject brick){
-        double x1 = brick.getBounds().getX(),x2 = x1 + brick.getBounds().getWidth();
-        double y1 = brick.getBounds().getY(),y2 = y1 + brick.getBounds().getHeight();
-        move(-velocityX,-velocityY);
-        boolean isLeft = getX2() <= x1,isRight = getX1() >= x2, isUp = getY2() <= y1, isDown = getY1() >= y2;
-        move(velocityX,velocityY);
-        if(isLeft || isRight)setVelocityX(-getVelocityX());else
-        if(isUp || isDown)setVelocityY(-getVelocityY());
+    public boolean checkRectCollision(GObject brick, boolean changeVelocity) {
+        double x1 = brick.getBounds().getX(), x2 = x1 + brick.getBounds().getWidth();
+        double y1 = brick.getBounds().getY(), y2 = y1 + brick.getBounds().getHeight();
+        move(-velocityX, -velocityY);
+        boolean isLeft = getCenterX() <= x1, isRight = getCenterX() >= x2, isUp = getCenterY() <= y1, isDown = getCenterY() >= y2;
+        move(velocityX, velocityY);
+        if (changeVelocity) {
+            if (isLeft || isRight) setVelocityX(-getVelocityX());
+            else if (isUp || isDown) setVelocityY(-getVelocityY());
+        }
         return isLeft || isRight || isUp || isDown;
     }
+
 }
