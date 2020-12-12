@@ -112,7 +112,7 @@ public class Main extends GraphicsProgram {
         plat.setLocation(getWidth() / 2 - plat.getWidth() / 2,getHeight() - 3 * plat.getHeight());
         add(plat);
 
-        BrickGenerator gen = new Level1();
+        BrickGenerator gen = new Level2();
         brickCount = gen.generate(this.getGCanvas());
         ball = new Ball((GAME_X2 + GAME_X1)/ 2 - BALL_RADIUS,plat.getY1() - 3 * BALL_RADIUS,BALL_RADIUS,BALL_RADIUS);
         add(ball);

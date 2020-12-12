@@ -5,7 +5,8 @@ public class Level2 extends BrickGenerator{
     public int generate(GCanvas canvas) {
         int cnt = 1;
         for(int i = 0;i <= 7; ++i){
-            x = Main.GAME_X1 - width - Main.BRICK_SEP;
+            double rawWidth = (width + Main.BRICK_SEP) * (cnt - 1) + width;
+            x = (Main.GAME_X1 + Main.GAME_X2) / 2 - rawWidth / 2;
             for(int j = 0; j < cnt; ++j){
                 Brick brick = new Brick("img/WoodenBrick" + (i / 2 + 1) + ".png");
                 brick.setLocation(x,y);
