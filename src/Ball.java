@@ -5,14 +5,18 @@ public class Ball extends GOval {
     private double velocityX;
     private double velocityY;
 
+    private double startX;
+    private double startY;
+
     public Ball(double v, double v1) {
         super(v, v1);
+        startX = startY = 0;
     }
 
     public Ball(double v, double v1, double v2, double v3) {
         super(v, v1, v2, v3);
-        velocityX = 2;
-        velocityY = 4;
+        startX = v;
+        startY = v1;
     }
 
     /** Move ball by it's velocity*/
@@ -76,7 +80,6 @@ public class Ball extends GOval {
      */
     public boolean checkWallCollision() {
         if (getY2() >= Main.GAME_Y2) {
-            setVelocityY(-getVelocityY());
             return true;
         }
         if (getX1() <= Main.GAME_X1)
@@ -103,6 +106,26 @@ public class Ball extends GOval {
             else if (isUp || isDown) setVelocityY(-getVelocityY());
         }
         return isLeft || isRight || isUp || isDown;
+    }
+
+    public boolean checkPlatCollision(GObject plat) {
+        double x1 = plat.getBounds().getX(), x2 = x1 + plat.getBounds().getWidth();
+        double y1 = plat.getBounds().getY(), y2 = y1 + plat.getBounds().getHeight();
+        move(-velocityX, -velocityY);
+        boolean isUp = getCenterY() <= y1;
+        move(velocityX, velocityY);
+        return isUp;
+    }
+
+    public void reSpawn(double magnitude){
+        randomVelocity(magnitude);
+        setLocation(startX,startY);
+        pause(1000);
+    }
+
+    public void randomVelocity(double magnitude){
+        setVelocityX((Main.gen.nextBoolean() ? 1 : -1) * Main.gen.nextDouble(1,magnitude));
+        setVelocityY(-Math.sqrt(magnitude * magnitude - velocityX * velocityX));
     }
 
 }

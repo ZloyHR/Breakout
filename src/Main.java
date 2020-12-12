@@ -1,6 +1,8 @@
+import acm.graphics.GImage;
 import acm.graphics.GObject;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
+import acm.util.RandomGenerator;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -17,6 +19,8 @@ public class Main extends GraphicsProgram {
     public static double GAME_X2;
     public static double GAME_Y1 = 60;
     public static double GAME_Y2;
+
+    public static RandomGenerator gen = new RandomGenerator();
 
     /** Dimensions of the paddle */
     private static final int PADDLE_WIDTH = 60;
@@ -51,12 +55,14 @@ public class Main extends GraphicsProgram {
 
     private static final int FRAME_UPDATE = 10;
 
-    Ball ball = new Ball(0,520,BALL_RADIUS,BALL_RADIUS);
+    Ball ball;
     Platform plat = new Platform("img/Plat.png");
     Score score = new Score("Score : ");
-    Time time = new Time("Time pass : ");
-    Lives lives = new Lives("Lives left : ");
+    Time time = new Time("");
+    Lives lives = new Lives("");
     Font font;
+
+    private int brickCount = 0;
 
     GRect statisticBox;
 
@@ -72,44 +78,70 @@ public class Main extends GraphicsProgram {
         GAME_Y2 = getHeight();
 
         statisticBox = new GRect(GAME_X1,0,getWidth(),GAME_Y1);
-        statisticBox.setFillColor(Color.RED);
+        statisticBox.setFillColor(new Color(53,77,85));
         statisticBox.setFilled(true);
         add(statisticBox);
 
         score.setFont(font.deriveFont(Font.BOLD,24.0f));
         score.setLocation(statisticBox.getWidth() / 2 - score.getWidth() / 2,
-                statisticBox.getHeight() / 2);
+                statisticBox.getHeight() / 2 + score.getHeight() / 4);
         add(score);
 
+        GImage heart = new GImage("img/Heart.png");
+        heart.scale(0.1);
+        heart.setLocation(GAME_X1,statisticBox.getHeight() / 2 - heart.getHeight() / 2);
+        add(heart);
+
         lives.setFont(font.deriveFont(Font.BOLD,24.0f));
-        lives.setLocation(GAME_X1,
-                statisticBox.getHeight() / 2);
+        lives.setLocation(GAME_X1 + heart.getWidth() + 5,
+                statisticBox.getHeight() / 2 + lives.getHeight() / 4);
         lives.setValue(LIVES);
         add(lives);
 
         time.setFont(font.deriveFont(Font.BOLD,24.0f));
         time.setValue(0);
         time.setLocation(GAME_X2 - time.getWidth() - 10,
-                statisticBox.getHeight() / 2);
+                statisticBox.getHeight() / 2 + time.getHeight() / 4);
         add(time);
+
+        GImage timer = new GImage("img/Time.png");
+        timer.scale(0.1);
+        timer.setLocation(time.getX() - timer.getWidth() - 5,statisticBox.getHeight() / 2 - timer.getHeight() / 2);
+        add(timer);
+
 
         addMouseListeners();
 
-        add(ball);
-
         plat.setLocation(getWidth() / 2 - plat.getWidth() / 2,getHeight() - 3 * plat.getHeight());
         add(plat);
+        plat.sendToFront();
 
         createBricks();
 
-        while (true){
+        ball = new Ball((GAME_X2 + GAME_X1)/ 2 - BALL_RADIUS,plat.getY1() - 3 * BALL_RADIUS,BALL_RADIUS,BALL_RADIUS);
+        add(ball);
+        ball.reSpawn(5);
+
+
+        gameCycle();
+    }
+
+    private void gameCycle() {
+        while (lives.isLive()){
             ball.moveByVelocity();
-            ball.checkWallCollision();
+            if(ball.checkWallCollision()){
+                lives.addToValue(-1);
+                ball.reSpawn(5);
+            };
             checkBrick();
             checkPlat();
-            time.addToValue(FRAME_UPDATE);
+            time.addToValue(1.75 * FRAME_UPDATE);
             pause(FRAME_UPDATE);
         }
+    }
+
+    private boolean gameOver(){
+        return !lives.isLive() || brickCount <= 0;
     }
 
     @Override
@@ -127,6 +159,7 @@ public class Main extends GraphicsProgram {
                 x += width + 1;
                 if(j == 3 || j == 7)continue;;
                 Brick brick = new Brick(x,y,width,height);
+                brickCount++;
                 add(brick);
             }
             y += height + 1;
@@ -140,12 +173,17 @@ public class Main extends GraphicsProgram {
                 GObject elementAt = getElementAt(ball.getX1() + addX, ball.getY1() + addY);
                 if(!isBrick(elementAt))continue;
                 if(ball.checkRectCollision(elementAt,true)){
-                    remove(elementAt);
-                    score.addToValue(100);
+                    removeBrick(elementAt);
                     return;
                 }
             }
         }
+    }
+
+    private void removeBrick(GObject brick){
+        remove(brick);
+        brickCount--;
+        score.addToValue(100);
     }
 
     /**Figure situation than ball is colliding with platform*/
@@ -153,7 +191,7 @@ public class Main extends GraphicsProgram {
         for(double addX = 0;addX <= ball.getBounds().getWidth(); addX += ball.getBounds().getWidth()){
             for(double addY = 0;addY <= ball.getBounds().getWidth(); addY += ball.getBounds().getWidth()){
                 GObject elementAt = getElementAt(ball.getX1() + addX, ball.getY1() + addY);
-                if(elementAt == plat && ball.checkRectCollision(elementAt,false)){
+                if(elementAt == plat && ball.checkPlatCollision(elementAt)){
                     plat.bounce(ball);
                     return;
                 }

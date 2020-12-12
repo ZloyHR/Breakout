@@ -8,6 +8,10 @@ public class Lives extends Value {
         super(preValueText, v, v1);
     }
 
+    public boolean isLive(){
+        return getValue() > 0;
+    }
+
     @Override
     public void setValue(double value) {
         super.setValue(value);
