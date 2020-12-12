@@ -1,8 +1,6 @@
 import acm.graphics.GObject;
 import acm.graphics.GOval;
 
-import java.awt.*;
-
 public class Ball extends GOval {
     private double velocityX;
     private double velocityY;
@@ -77,15 +75,15 @@ public class Ball extends GOval {
      * Returns false if ball collide with window border and change velocity to keep ball inside window
      */
     public boolean checkWallCollision() {
-        if (getY2() >= Main.HEIGHT) {
+        if (getY2() >= Main.GAME_Y2) {
             setVelocityY(-getVelocityY());
             return true;
         }
-        if (getX1() <= 0)
+        if (getX1() <= Main.GAME_X1)
             setVelocityX(-getVelocityX());
-        if (getY1() <= 0)
+        if (getY1() <= Main.GAME_Y1)
             setVelocityY(-getVelocityY());
-        if (getX2() >= Main.WIDTH)
+        if (getX2() >= Main.GAME_X2)
             setVelocityX(-getVelocityX());
         return false;
 

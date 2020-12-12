@@ -1,4 +1,5 @@
 import acm.graphics.GObject;
+import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
 
 import java.awt.event.MouseEvent;
@@ -9,8 +10,10 @@ public class Main extends GraphicsProgram {
     public static final int APPLICATION_WIDTH = 1200;
     public static final int APPLICATION_HEIGHT = 600;
 
-    public static double WIDTH;
-    public static double HEIGHT;
+    public static double GAME_X1 = 0;
+    public static double GAME_X2;
+    public static double GAME_Y1 = 60;
+    public static double GAME_Y2;
 
     /** Dimensions of the paddle */
     private static final int PADDLE_WIDTH = 60;
@@ -47,6 +50,7 @@ public class Main extends GraphicsProgram {
 
     Ball ball = new Ball(0,520,BALL_RADIUS,BALL_RADIUS);
     Platform plat = new Platform("img/Plat.png");
+    Score score = new Score("Score : ");
 
     /* Method: run() */
     /** Runs the Breakout program. */
@@ -54,8 +58,8 @@ public class Main extends GraphicsProgram {
     public void run() {
         /* You fill this in, along with any subsidiary methods */
         this.setSize(APPLICATION_WIDTH,APPLICATION_HEIGHT);
-        WIDTH = getWidth();
-        HEIGHT = getHeight();
+        GAME_X2 = getWidth();
+        GAME_Y2 = getHeight();
         addMouseListeners();
         add(ball);
         plat.setLocation(getWidth() / 2 - plat.getWidth() / 2,getHeight() - 3 * plat.getHeight());
@@ -76,7 +80,7 @@ public class Main extends GraphicsProgram {
     }
 
     private void createBricks(){
-        double width = WIDTH / 11.0 - 1;
+        double width = getWidth() / 11.0 - 1;
         double height = 25;
         double x = 0,y = BRICK_Y_OFFSET;
         for(int i = 0;i <= 10; ++i){
