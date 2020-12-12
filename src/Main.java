@@ -26,29 +26,19 @@ public class Main extends GraphicsProgram {
     private static final int PADDLE_WIDTH = 60;
     private static final int PADDLE_HEIGHT = 10;
 
-    /** Offset of the paddle up from the bottom */
-    private static final int PADDLE_Y_OFFSET = 530;
-
-    /** Number of bricks per row */
-    private static final int NBRICKS_PER_ROW = 10;
-
-    /** Number of rows of bricks */
-    private static final int NBRICK_ROWS = 10;
-
     /** Separation between bricks */
-    private static final int BRICK_SEP = 4;
+    public static double BRICK_SEP = 4;
+
+    public static double BRICK_IN_ROW = 15;
 
     /** Width of a brick */
-    private static final int BRICK_WIDTH = 0;
+    public static double BRICK_WIDTH = 0;
 
     /** Height of a brick */
-    private static final int BRICK_HEIGHT = 8;
+    public static double BRICK_HEIGHT = 25;
 
     /** Radius of the ball in pixels */
     private static final int BALL_RADIUS = 10;
-
-    /** Offset of the top brick row from the top */
-    private static final int BRICK_Y_OFFSET = 70;
 
     /** Number of lives */
     private static final int LIVES = 3;
@@ -65,6 +55,7 @@ public class Main extends GraphicsProgram {
     private int brickCount = 0;
 
     GRect statisticBox;
+    GImage back;
 
     /* Method: run() */
     /** Runs the Breakout program. */
@@ -76,6 +67,12 @@ public class Main extends GraphicsProgram {
         this.setSize(APPLICATION_WIDTH,APPLICATION_HEIGHT);
         GAME_X2 = getWidth();
         GAME_Y2 = getHeight();
+
+        back = new GImage("img/Back.png");
+        back.scale(getWidth() / back.getWidth());
+        add(back);
+
+        BRICK_WIDTH = (GAME_X2 - GAME_X1 - BRICK_SEP * (BRICK_IN_ROW - 1)) / BRICK_IN_ROW;
 
         statisticBox = new GRect(GAME_X1,0,getWidth(),GAME_Y1);
         statisticBox.setFillColor(new Color(53,77,85));
@@ -114,20 +111,20 @@ public class Main extends GraphicsProgram {
 
         plat.setLocation(getWidth() / 2 - plat.getWidth() / 2,getHeight() - 3 * plat.getHeight());
         add(plat);
-        plat.sendToFront();
 
-        createBricks();
-
+        BrickGenerator gen = new Level1();
+        brickCount = gen.generate(this.getGCanvas());
         ball = new Ball((GAME_X2 + GAME_X1)/ 2 - BALL_RADIUS,plat.getY1() - 3 * BALL_RADIUS,BALL_RADIUS,BALL_RADIUS);
         add(ball);
         ball.reSpawn(5);
 
+        plat.sendToFront();
 
         gameCycle();
     }
 
     private void gameCycle() {
-        while (lives.isLive()){
+        while (!gameOver()){
             ball.moveByVelocity();
             if(ball.checkWallCollision()){
                 lives.addToValue(-1);
@@ -147,23 +144,6 @@ public class Main extends GraphicsProgram {
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
         plat.setLocation(mouseEvent.getX() - plat.getWidth() / 2,plat.getY());
-    }
-
-    private void createBricks(){
-        double width = getWidth() / 11.0 - 1;
-        double height = 25;
-        double x = 0,y = BRICK_Y_OFFSET;
-        for(int i = 0;i <= 10; ++i){
-            x = -width;
-            for(int j = 0;j <= 10; ++j){
-                x += width + 1;
-                if(j == 3 || j == 7)continue;;
-                Brick brick = new Brick(x,y,width,height);
-                brickCount++;
-                add(brick);
-            }
-            y += height + 1;
-        }
     }
 
     /**Figure situation than ball is colliding with brick*/
@@ -200,7 +180,7 @@ public class Main extends GraphicsProgram {
     }
 
     private boolean isBrick(GObject obj){
-        return obj != ball && obj != statisticBox && obj != plat && obj != null;
+        return obj != back && obj != ball && obj != statisticBox && obj != plat && obj != null;
     }
 
 }

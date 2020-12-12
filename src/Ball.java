@@ -1,6 +1,8 @@
 import acm.graphics.GObject;
 import acm.graphics.GOval;
 
+import java.awt.*;
+
 public class Ball extends GOval {
     private double velocityX;
     private double velocityY;
@@ -15,6 +17,8 @@ public class Ball extends GOval {
 
     public Ball(double v, double v1, double v2, double v3) {
         super(v, v1, v2, v3);
+        setFilled(true);
+        setFillColor(Color.white);
         startX = v;
         startY = v1;
     }
