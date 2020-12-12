@@ -91,6 +91,7 @@ public class Main extends GraphicsProgram {
         }
     }
 
+    /**Figure situation than ball is colliding with brick*/
     private void checkBrick(){
         for(double addX = 0;addX <= ball.getBounds().getWidth(); addX += ball.getBounds().getWidth()){
             for(double addY = 0;addY <= ball.getBounds().getWidth(); addY += ball.getBounds().getWidth()){
@@ -104,6 +105,7 @@ public class Main extends GraphicsProgram {
         }
     }
 
+    /**Figure situation than ball is colliding with platform*/
     private void checkPlat() {
         for(double addX = 0;addX <= ball.getBounds().getWidth(); addX += ball.getBounds().getWidth()){
             for(double addY = 0;addY <= ball.getBounds().getWidth(); addY += ball.getBounds().getWidth()){

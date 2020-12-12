@@ -11,24 +11,25 @@ public class Platform extends GImage {
         super(s, v, v1);
     }
 
+    /** Left side of object*/
     public double getX1(){ return  getBounds().getX(); }
-
+    /** Right side of object*/
     public double getX2(){ return getBounds().getX() + getBounds().getWidth(); }
-
+    /** Up side of object*/
     public double getY1(){ return getBounds().getY(); }
+    /** Down side of object*/
+    public double getY2(){ return getBounds().getY() + getBounds().getHeight(); }
 
-    public double getY2(){
-        return getBounds().getY() + getBounds().getHeight();
-    }
-
+    /** Center x coordinate of object*/
     public double getCenterX(){
         return (getX1() + getX2()) / 2;
     }
-
+    /** Center y coordinate of object*/
     public double getCenterY(){
         return (getY1() + getY2()) / 2;
     }
 
+    /** Change ball velocity looking by position on platform*/
     public void bounce(Ball ball){
         double deltaX = getCenterX() - ball.getCenterX();
         boolean isNeg = deltaX < 0;

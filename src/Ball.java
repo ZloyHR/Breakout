@@ -17,54 +17,55 @@ public class Ball extends GOval {
         velocityY = 4;
     }
 
+    /** Move ball by it's velocity*/
     public void moveByVelocity() {
         move(velocityX, velocityY);
     }
 
+    /**Returns xVelocity of ball*/
     public double getVelocityX() {
         return velocityX;
     }
 
+    /**Sets xVelocity of ball*/
     public void setVelocityX(double velocityX) {
         this.velocityX = velocityX;
     }
 
+    /**Returns yVelocity of ball*/
     public double getVelocityY() {
         return velocityY;
     }
 
+    /**Sets yVelocity of ball*/
     public void setVelocityY(double velocityY) {
         this.velocityY = velocityY;
     }
 
-    public double getX1() {
-        return getBounds().getX();
-    }
+    /** Left side of object*/
+    public double getX1(){ return  getBounds().getX(); }
+    /** Right side of object*/
+    public double getX2(){ return getBounds().getX() + getBounds().getWidth(); }
+    /** Up side of object*/
+    public double getY1(){ return getBounds().getY(); }
+    /** Down side of object*/
+    public double getY2(){ return getBounds().getY() + getBounds().getHeight(); }
 
-    public double getX2() {
-        return getBounds().getX() + getBounds().getWidth();
-    }
-
-    public double getY1() {
-        return getBounds().getY();
-    }
-
-    public double getY2() {
-        return getBounds().getY() + getBounds().getHeight();
-    }
-
-    public double getCenterX() {
+    /** Center x coordinate of object*/
+    public double getCenterX(){
         return (getX1() + getX2()) / 2;
     }
-
-    public double getCenterY() {
+    /** Center y coordinate of object*/
+    public double getCenterY(){
         return (getY1() + getY2()) / 2;
     }
 
+    /** Returns magnitude of ball velocity*/
     public double getVelocity() {
         return Math.sqrt(velocityX * velocityX + velocityY * velocityY);
     }
 
+    /**Scale ball velocity by double*/
     public void scaleVelocity(double scale) {
         scale = Math.sqrt(scale);
         velocityX *= scale;
