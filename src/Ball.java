@@ -1,8 +1,6 @@
 import acm.graphics.GObject;
 import acm.graphics.GOval;
 
-import java.awt.*;
-
 public class Ball extends GOval {
     private double velocityX;
     private double velocityY;
@@ -38,19 +36,15 @@ public class Ball extends GOval {
     }
 
     public double getX1(){
-        return getBounds().getX();
+        return  getX();
     }
 
-    public double getX2(){
-        return getBounds().getX() + getBounds().getWidth();
-    }
+    public double getX2(){ return getX() + getWidth(); }
 
-    public double getY1(){
-        return getBounds().getY();
-    }
+    public double getY1(){ return getY(); }
 
     public double getY2(){
-        return getBounds().getY() + getBounds().getHeight();
+        return getY() + getHeight();
     }
 
     public double getCenterX(){

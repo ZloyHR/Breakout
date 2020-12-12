@@ -9,16 +9,15 @@ public class Main extends GraphicsProgram {
     public static final int APPLICATION_WIDTH = 1200;
     public static final int APPLICATION_HEIGHT = 600;
 
-    /** Dimensions of game board (usually the same) */
-    public static final int WIDTH = APPLICATION_WIDTH - 15;
-    public static final int HEIGHT = APPLICATION_HEIGHT - 60;
+    public static double WIDTH;
+    public static double HEIGHT;
 
     /** Dimensions of the paddle */
     private static final int PADDLE_WIDTH = 60;
     private static final int PADDLE_HEIGHT = 10;
 
     /** Offset of the paddle up from the bottom */
-    private static final int PADDLE_Y_OFFSET = 500;
+    private static final int PADDLE_Y_OFFSET = 530;
 
     /** Number of bricks per row */
     private static final int NBRICKS_PER_ROW = 10;
@@ -30,8 +29,7 @@ public class Main extends GraphicsProgram {
     private static final int BRICK_SEP = 4;
 
     /** Width of a brick */
-    private static final int BRICK_WIDTH =
-            (WIDTH - (NBRICKS_PER_ROW - 1) * BRICK_SEP) / NBRICKS_PER_ROW;
+    private static final int BRICK_WIDTH = 0;
 
     /** Height of a brick */
     private static final int BRICK_HEIGHT = 8;
@@ -47,7 +45,7 @@ public class Main extends GraphicsProgram {
 
     private static final int FRAME_UPDATE = 10;
 
-    Ball ball = new Ball(0,400,BALL_RADIUS,BALL_RADIUS);
+    Ball ball = new Ball(0,520,BALL_RADIUS,BALL_RADIUS);
     Platform plat = new Platform(PADDLE_WIDTH,PADDLE_HEIGHT);
 
     /* Method: run() */
@@ -56,9 +54,11 @@ public class Main extends GraphicsProgram {
     public void run() {
         /* You fill this in, along with any subsidiary methods */
         this.setSize(APPLICATION_WIDTH,APPLICATION_HEIGHT);
+        WIDTH = getWidth();
+        HEIGHT = getHeight();
         addMouseListeners();
         add(ball);
-        plat.setLocation(WIDTH / 2 - plat.getWidth() / 2,PADDLE_Y_OFFSET);
+        plat.setLocation(getWidth() / 2 - plat.getWidth() / 2,PADDLE_Y_OFFSET);
         add(plat);
         createBricks();
         while (true){
