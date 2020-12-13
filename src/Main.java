@@ -16,28 +16,38 @@ public class Main extends GraphicsProgram {
     public static final int APPLICATION_WIDTH = 1200;
     public static final int APPLICATION_HEIGHT = 600;
 
+    /**Random generator*/
     public static RandomGenerator gen = new RandomGenerator();
 
+    /**How fast game redraw freames*/
     public static final int FRAME_UPDATE = 7;
+    /**Game font*/
     public static Font font;
 
+    /**Game instance*/
     public static Main instance;
 
+    /**Game levels*/
     BrickGenerator level1;
     BrickGenerator level2;
     BrickGenerator level3;
     BrickGenerator level4;
 
+    /**Game scenes*/
     Menu menu;
     Game game;
     EndGame endGame;
 
+    /**Current scene*/
     Scene scene;
 
+    /**Is level button clicked*/
     private int clickedButton = 0;
+    /**Menu or Exit button clicked*/
     private int toContinue = 0;
 
     @Override
+    /**Main cycle*/
     public void run() {
         instance = this;
         SoundClip soundtrack = new SoundClip("fx/soundTrack (1).wav");
@@ -67,6 +77,7 @@ public class Main extends GraphicsProgram {
 
     }
 
+    /**Figure what to do if game ends or scene switches back to menu*/
     private void waitForGame() {
         while(true){
             if(clickedButton != 0){
@@ -93,6 +104,7 @@ public class Main extends GraphicsProgram {
         }
     }
 
+    /**Creates Menu*/
     public void startMenu(){
         clickedButton = toContinue = 0;
         scene = Scene.MENU;
@@ -101,6 +113,11 @@ public class Main extends GraphicsProgram {
         waitForGame();
     }
 
+    /**
+     * Creates Game
+     * @param level Number of game level
+     * @return Is level completed
+     */
     public boolean startGame(int level){
         game = new Game(getGCanvas());
         scene = Scene.GAME;
@@ -108,6 +125,10 @@ public class Main extends GraphicsProgram {
         return game.run();
     }
 
+    /**
+     * Creates EndGame
+     * @return To exit game
+     */
     public boolean endGame(){
         endGame = new EndGame(getGCanvas());
         scene = Scene.END_GAME;
@@ -120,11 +141,13 @@ public class Main extends GraphicsProgram {
     }
 
     @Override
+    /**Figure cursor movement*/
     public void mouseMoved(MouseEvent mouseEvent) {
         if(scene == Scene.GAME)game.mouseMoved(mouseEvent);
     }
 
     @Override
+    /**Figure mouse click*/
     public void mouseReleased(MouseEvent mouseEvent) {
         if(scene == Scene.MENU){
             int x = menu.mouseClicked(mouseEvent);
@@ -140,6 +163,7 @@ public class Main extends GraphicsProgram {
         }
     }
 
+    /**Returns level by number*/
     private BrickGenerator getLevel(int x){
         if(x == 1)return level1;
         if(x == 2)return level2;

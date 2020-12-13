@@ -1,13 +1,12 @@
 import acm.graphics.GCanvas;
 
 public class BrickGenerator {
+    /**Start coordinates and game field size*/
     public double width,height,x,y;
+    /**Amount of generated bricks*/
     public int brickCount;
 
-    BrickGenerator(){
-
-    }
-
+    /**Level generator*/
     public int generate(GCanvas canvas){
         width = Game.BRICK_WIDTH;
         height = Game.BRICK_HEIGHT;

@@ -8,14 +8,19 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class Game {
+    /** Left-Up coordinate of game field */
     public static double GAME_X1 = 0;
+    /** Right-Up coordinate of game field */
     public static double GAME_X2;
+    /** Left-Down coordinate of game field */
     public static double GAME_Y1 = 60;
+    /** Right-Down coordinate of game field */
     public static double GAME_Y2;
 
     /** Separation between bricks */
     public static double BRICK_SEP = 4;
 
+    /** Amount of bricks in row*/
     public static double BRICK_IN_ROW = 15;
 
     /** Width of a brick */
@@ -25,45 +30,64 @@ public class Game {
     public static double BRICK_HEIGHT = 25;
 
     /** Number of lives */
-    private static final int LIVES = 1;
+    private static final int LIVES = 3;
 
+    /** Ball velocity */
     private static final double BALL_VELOCITY = 2.5;
 
+    /**Ball object*/
     Ball ball;
+
+    /**Platform object*/
     Platform plat = new Platform("img/Platform.png");
+
+    /**Score object*/
     static Score score = new Score("Score : ",0);
+
+    /**Time object*/
     static Time time = new Time("",0);
+
+    /**Live object*/
     static Lives lives = new Lives("",LIVES);
 
+    /**Amount of bricks that left */
     private int brickCount = 0;
 
+    /**Rect holder of all statistics*/
     GRect statisticBox;
+
+    /**Background image*/
     GImage back;
 
+    /**Game canvas*/
     GCanvas gameCanvas;
 
+    /** Returns current level class*/
     public BrickGenerator getLevel() {
         return level;
     }
 
+    /** Sets current level as given*/
     public void setLevel(BrickGenerator level) {
         this.level = level;
     }
 
+    /**Current level*/
     BrickGenerator level;
 
+    /**Constructor that creates class with given canvas*/
     public Game(GCanvas canvas) {
         canvas.removeAll();
         gameCanvas = canvas;
     }
 
+    /**Resets all stats components*/
     public void resetGame(){
         score = new Score("Score : ",0);
         time = new Time("",0);
         lives = new Lives("",LIVES);
     }
 
-    /* Method: run() */
     /** Runs the Breakout program. */
     public boolean run() {
         /* You fill this in, along with any subsidiary methods */
@@ -124,6 +148,7 @@ public class Game {
         return gameCycle();
     }
 
+    /**Returns true if player wins level and false if opposite*/
     private boolean gameCycle() {
         while (!gameOver()){
             ball.moveByVelocity();
@@ -140,10 +165,12 @@ public class Game {
         return brickCount <= 0;
     }
 
+    /**Returns true if game is over*/
     private boolean gameOver(){
         return !lives.isLive() || brickCount <= 0;
     }
 
+    /**Move platform if mouse moved*/
     public void mouseMoved(MouseEvent mouseEvent) {
         double x = mouseEvent.getX() - plat.getWidth() / 2;
         if(x < GAME_X1)x = GAME_X1;
@@ -163,6 +190,7 @@ public class Game {
         if(checkBrick(ball.getX2(),ball.getY2()))return;
     }
 
+    /**Returns true if brick was removed*/
     private boolean checkBrick(double x,double y){
         GObject elementAt = gameCanvas.getElementAt(x, y);
         if(!isBrick(elementAt))return false;
@@ -174,6 +202,7 @@ public class Game {
         return false;
     }
 
+    /**Removes brick from canvas with special sound*/
     private void removeBrick(GObject brick){
         long y = Math.round((brick.getBounds().getY() - GAME_Y1) / BRICK_HEIGHT);
         gameCanvas.remove(brick);
@@ -201,6 +230,7 @@ public class Game {
         }
     }
 
+    /**Returns true if this object is Brick*/
     private boolean isBrick(GObject obj){
         return obj != null && Math.abs(obj.getBounds().getWidth() - BRICK_WIDTH) < 1;
         //return obj != back && obj != ball && obj != statisticBox && obj != plat && obj != null;

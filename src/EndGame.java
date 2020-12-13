@@ -3,15 +3,22 @@ import acm.graphics.*;
 import java.awt.event.MouseEvent;
 
 public class EndGame {
+    /**Scene canvas*/
     GCanvas endGameCanvas;
+    /**Continue button*/
     Button con;
+    /**Exit button*/
     Button end;
 
+    /**Constructor
+     * @param canvas Drawing canvas
+     */
     public EndGame(GCanvas canvas) {
         canvas.removeAll();
         endGameCanvas = canvas;
     }
 
+    /**Draws stats per game and buttons to menu or to exit*/
     public void run(){
         GImage back = new GImage("img/BackMenu.gif");
         con = new Button("img/Button.png","Menu");
@@ -50,6 +57,7 @@ public class EndGame {
         back.scale(endGameCanvas.getWidth() / back.getWidth(),endGameCanvas.getHeight() / back.getHeight());
     }
 
+    /**Handle what button was clicked*/
     public int mouseClicked(MouseEvent mouseEvent) {
         GObject getElement = endGameCanvas.getElementAt(mouseEvent.getX(),mouseEvent.getY());
         if(getElement == con)return 1;
