@@ -3,6 +3,7 @@ import acm.graphics.GCanvas;
 public class Level3 extends BrickGenerator{
     @Override
     public int generate(GCanvas canvas) {
+        super.generate(canvas);
         int cnt;
         for(int i = 0;i <= 7; ++i){
             cnt = 2 * (i + 1);

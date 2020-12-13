@@ -18,7 +18,7 @@ public class Time extends Value{
         setLabel(getPreValueText() + getTwoDigit(min) + ":" + getTwoDigit(sec));
     }
 
-    private String getTwoDigit(double x){
+    public String getTwoDigit(double x){
         int v = (int)x;
         if(v < 10)return "0" + v;
         return "" + v;

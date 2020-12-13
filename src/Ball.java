@@ -26,9 +26,6 @@ public class Ball extends GImage {
     /** Move ball by it's velocity*/
     public void moveByVelocity() {
         move(velocityX, velocityY);
-//        setImage("img/Blade" + cnt + ".png");
-//        cnt++;
-//        if(cnt == 5)cnt = 1;
     }
 
     /**Returns xVelocity of ball*/
@@ -81,8 +78,6 @@ public class Ball extends GImage {
         velocityY *= scale;
     }
 
-    SoundClip clip = new SoundClip("fx/stoneTouch.wav");
-
     /**
      * Returns true if ball under the window
      * Returns false if ball collide with window border and change velocity to keep ball inside window
@@ -105,6 +100,7 @@ public class Ball extends GImage {
             play = true;
         }
         if(play) {
+            SoundClip clip = new SoundClip("fx/stoneTouch.wav");
             clip.stop();
             clip.setVolume(0.5);
             clip.play();

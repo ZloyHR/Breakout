@@ -3,6 +3,7 @@ import acm.graphics.GCanvas;
 public class Level2 extends BrickGenerator{
     @Override
     public int generate(GCanvas canvas) {
+        super.generate(canvas);
         int cnt = 1;
         for(int i = 0;i <= 7; ++i){
             double rawWidth = (width + Game.BRICK_SEP) * (cnt - 1) + width;

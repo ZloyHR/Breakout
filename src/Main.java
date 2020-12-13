@@ -40,12 +40,19 @@ public class Main extends GraphicsProgram {
     @Override
     public void run() {
         instance = this;
-        SoundClip soundtrack = new SoundClip("fx/soundTrack.wav");
+        SoundClip soundtrack = new SoundClip("fx/soundTrack (1).wav");
         soundtrack.setVolume(0.2);
         soundtrack.loop();
         soundtrack.play();
         addMouseListeners();
-        font = new Font(Font.SERIF,Font.PLAIN,24);
+        //font = new Font(Font.SERIF,Font.PLAIN,24);
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT,new File("fonts/RobotoMono-VariableFont_wght.ttf"));
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Game.GAME_X2 = getWidth();
         Game.GAME_Y2 = getHeight();
 
@@ -65,6 +72,10 @@ public class Main extends GraphicsProgram {
             if(clickedButton != 0){
                 boolean con = startGame(clickedButton);
                 if(!con) {
+                    SoundClip lose = new SoundClip("fx/lose.wav");
+                    lose.setVolume(0.4);
+                    lose.play();
+                    pause(lose.getDuration() * 1000);
                     if(endGame()){
                         System.exit(0);
                     }else{

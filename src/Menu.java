@@ -4,6 +4,7 @@ import acm.graphics.GLabel;
 import acm.graphics.GObject;
 import acm.util.SoundClip;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class Menu {
@@ -22,9 +23,10 @@ public class Menu {
     public void run(){
         GImage logo = new GImage("img/BREAKOUT.png");
         GImage back = new GImage("img/BackMenu.gif");
-        GLabel authors = new GLabel("Made by Dmytro Hetman and Ivan Dobrovolsky");
-        authors.setFont(Main.font.deriveFont(18.0f));
-        authors.setLocation(15,menuCanvas.getHeight() - authors.getHeight());
+        GLabel authors = new GLabel("© Made by Dmytro Hetman and Ivan Dobrovolsky");
+        authors.setFont(Main.font.deriveFont(20.0f));
+        authors.setColor(Color.gray);
+        authors.setLocation(15,menuCanvas.getHeight() - 2.2 * authors.getHeight());
         menuCanvas.add(authors);
         double centerX = menuCanvas.getWidth() / 2 + 35;
         double centerY = menuCanvas.getHeight() / 2 - 10;
@@ -38,10 +40,11 @@ public class Menu {
         back.scale(menuCanvas.getWidth() / back.getWidth(),menuCanvas.getHeight() / back.getHeight());
         logo.scale(0.5);
         logo.setLocation(centerX - logo.getWidth() / 2,centerY - logo.getHeight() - 20);
-        level1.setLocation(centerX - 2 * level1.getWidth() - 45,menuCanvas.getHeight() * 0.64);
-        level2.setLocation(centerX - 1 * level1.getWidth() - 15,menuCanvas.getHeight() * 0.64);
-        level3.setLocation(centerX - 0 * level1.getWidth() + 15,menuCanvas.getHeight() * 0.64);
-        level4.setLocation(centerX + 1 * level1.getWidth() + 45,menuCanvas.getHeight() * 0.64);
+        double yHeight = menuCanvas.getHeight() * 0.65;
+        level1.setLocation(centerX - 2 * level1.getWidth() - 45,yHeight - 1.25 * level1.getHeight());
+        level2.setLocation(centerX + 1 * level1.getWidth() + 45,yHeight - 1.25 * level1.getHeight());
+        level3.setLocation(centerX - 2 * level1.getWidth() - 45,yHeight);
+        level4.setLocation(centerX + 1 * level1.getWidth() + 45,yHeight);
     }
 
     public int mouseClicked(MouseEvent mouseEvent) {

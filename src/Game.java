@@ -30,7 +30,7 @@ public class Game {
     private static final double BALL_VELOCITY = 2.5;
 
     Ball ball;
-    Platform plat = new Platform("img/Plat.png");
+    Platform plat = new Platform("img/Platform.png");
     static Score score = new Score("Score : ",0);
     static Time time = new Time("",0);
     static Lives lives = new Lives("",LIVES);
@@ -107,6 +107,7 @@ public class Game {
         gameCanvas.add(timer);
 
 
+        plat.scale(0.35);
         plat.setLocation(gameCanvas.getWidth() / 2 - plat.getWidth() / 2,gameCanvas.getHeight() - 3 * plat.getHeight());
         gameCanvas.add(plat);
 
@@ -128,13 +129,14 @@ public class Game {
             ball.moveByVelocity();
             if(ball.checkWallCollision()){
                 lives.addToValue(-1);
-                ball.reSpawn(BALL_VELOCITY);
+                if(lives.isLive())ball.reSpawn(BALL_VELOCITY);
             };
             checkBrick();
             checkPlat();
             time.addToValue(1.75 * Main.FRAME_UPDATE);
             Main.instance.pause(Main.FRAME_UPDATE);
         }
+        ball.setLocation(5000,5000);
         return brickCount <= 0;
     }
 
@@ -184,6 +186,9 @@ public class Game {
             for(double addY = 0;addY <= ball.getBounds().getWidth(); addY += ball.getBounds().getWidth()){
                 GObject elementAt = gameCanvas.getElementAt(ball.getX1() + addX, ball.getY1() + addY);
                 if(elementAt == plat && ball.checkPlatCollision(elementAt)){
+                    SoundClip clip = new SoundClip("fx/snow.wav");
+                    clip.setVolume(0.4);
+                    clip.play();
                     plat.bounce(ball);
                     return;
                 }

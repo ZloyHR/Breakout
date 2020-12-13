@@ -7,7 +7,7 @@ public class Button extends GCompound {
     GImage img;
     public Button(String s,String text) {
         img = new GImage(s);
-        img.scale(0.5);
+        //img.scale(0.75);
         this.add(img);
 
         this.text = new GLabel(text);
