@@ -145,7 +145,10 @@ public class Game {
     }
 
     public void mouseMoved(MouseEvent mouseEvent) {
-        plat.setLocation(mouseEvent.getX() - plat.getWidth() / 2,plat.getY());
+        double x = mouseEvent.getX() - plat.getWidth() / 2;
+        if(x < GAME_X1)x = GAME_X1;
+        if(x + plat.getWidth() > GAME_X2)x = GAME_X2- plat.getWidth();
+        plat.setLocation(x,plat.getY());
     }
 
     /**Figure situation than ball is colliding with brick*/
