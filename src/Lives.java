@@ -1,11 +1,13 @@
 public class Lives extends Value {
 
-    public Lives(String preValueText) {
-        super(preValueText);
+    public Lives(String preValueText,double value) {
+        super(preValueText,value);
+        setValue(value);
     }
 
-    public Lives(String preValueText, double v, double v1) {
-        super(preValueText, v, v1);
+    public Lives(String preValueText,double value, double v, double v1) {
+        super(preValueText, value, v, v1);
+        setValue(value);
     }
 
     public boolean isLive(){

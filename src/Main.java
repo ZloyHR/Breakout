@@ -16,177 +16,94 @@ public class Main extends GraphicsProgram {
     public static final int APPLICATION_WIDTH = 1200;
     public static final int APPLICATION_HEIGHT = 600;
 
-    public static double GAME_X1 = 0;
-    public static double GAME_X2;
-    public static double GAME_Y1 = 60;
-    public static double GAME_Y2;
-
     public static RandomGenerator gen = new RandomGenerator();
 
-    /** Dimensions of the paddle */
-    private static final int PADDLE_WIDTH = 60;
-    private static final int PADDLE_HEIGHT = 10;
+    public static final int FRAME_UPDATE = 7;
+    public static Font font;
 
-    /** Separation between bricks */
-    public static double BRICK_SEP = 4;
+    public static Main instance;
 
-    public static double BRICK_IN_ROW = 15;
+    BrickGenerator level1;
+    BrickGenerator level2;
+    BrickGenerator level3;
+    BrickGenerator level4;
 
-    /** Width of a brick */
-    public static double BRICK_WIDTH = 0;
+    Menu menu;
+    Game game;
 
-    /** Height of a brick */
-    public static double BRICK_HEIGHT = 25;
+    Scene scene;
 
-    /** Radius of the ball in pixels */
-    private static final int BALL_RADIUS = 10;
+    private int clickedButton = 0;
 
-    /** Number of lives */
-    private static final int LIVES = 3;
-
-    private static final int FRAME_UPDATE = 10;
-
-    Ball ball;
-    Platform plat = new Platform("img/Plat.png");
-    Score score = new Score("Score : ");
-    Time time = new Time("");
-    Lives lives = new Lives("");
-    Font font;
-
-    private int brickCount = 0;
-
-    GRect statisticBox;
-    GImage back;
-
-    /* Method: run() */
-    /** Runs the Breakout program. */
     @Override
     public void run() {
-        /* You fill this in, along with any subsidiary methods */
-        font = new Font(Font.SERIF,Font.PLAIN,24);
-
-        this.setSize(APPLICATION_WIDTH,APPLICATION_HEIGHT);
-        GAME_X2 = getWidth();
-        GAME_Y2 = getHeight();
-
-        back = new GImage("img/Back.png");
-        back.scale(getWidth() / back.getWidth());
-        add(back);
-
-        BRICK_WIDTH = (GAME_X2 - GAME_X1 - BRICK_SEP * (BRICK_IN_ROW - 1)) / BRICK_IN_ROW;
-
-        statisticBox = new GRect(GAME_X1,0,getWidth(),GAME_Y1);
-        statisticBox.setFillColor(new Color(53,77,85));
-        statisticBox.setFilled(true);
-        add(statisticBox);
-
-        score.setFont(font.deriveFont(Font.BOLD,24.0f));
-        score.setLocation(statisticBox.getWidth() / 2 - score.getWidth() / 2,
-                statisticBox.getHeight() / 2 + score.getHeight() / 4);
-        add(score);
-
-        GImage heart = new GImage("img/Heart.png");
-        heart.scale(0.1);
-        heart.setLocation(GAME_X1,statisticBox.getHeight() / 2 - heart.getHeight() / 2);
-        add(heart);
-
-        lives.setFont(font.deriveFont(Font.BOLD,24.0f));
-        lives.setLocation(GAME_X1 + heart.getWidth() + 5,
-                statisticBox.getHeight() / 2 + lives.getHeight() / 4);
-        lives.setValue(LIVES);
-        add(lives);
-
-        time.setFont(font.deriveFont(Font.BOLD,24.0f));
-        time.setValue(0);
-        time.setLocation(GAME_X2 - time.getWidth() - 10,
-                statisticBox.getHeight() / 2 + time.getHeight() / 4);
-        add(time);
-
-        GImage timer = new GImage("img/Time.png");
-        timer.scale(0.1);
-        timer.setLocation(time.getX() - timer.getWidth() - 5,statisticBox.getHeight() / 2 - timer.getHeight() / 2);
-        add(timer);
-
-
+        instance = this;
         addMouseListeners();
+        font = new Font(Font.SERIF,Font.PLAIN,24);
+        Game.GAME_X2 = getWidth();
+        Game.GAME_Y2 = getHeight();
 
-        plat.setLocation(getWidth() / 2 - plat.getWidth() / 2,getHeight() - 3 * plat.getHeight());
-        add(plat);
+        Game.BRICK_WIDTH = (Game.GAME_X2 - Game.GAME_X1 - Game.BRICK_SEP * (Game.BRICK_IN_ROW - 1)) / Game.BRICK_IN_ROW;
 
-        BrickGenerator gen = new Level2();
-        brickCount = gen.generate(this.getGCanvas());
-        ball = new Ball("img/Blade1.png",(GAME_X2 + GAME_X1)/ 2 - BALL_RADIUS,plat.getY1() - 3 * BALL_RADIUS);
-        //ball.scale(0.025);
-        add(ball);
-        ball.reSpawn(5);
+        level1 = new Level4();
+        level2 = new Level1();
+        level3 = new Level2();
+        level4 = new Level3();
 
-        plat.sendToFront();
+        startMenu();
 
-        gameCycle();
+
+        waitForGame();
     }
 
-    private void gameCycle() {
-        while (!gameOver()){
-            ball.moveByVelocity();
-            if(ball.checkWallCollision()){
-                lives.addToValue(-1);
-                ball.reSpawn(5);
-            };
-            checkBrick();
-            checkPlat();
-            time.addToValue(1.75 * FRAME_UPDATE);
-            pause(FRAME_UPDATE);
+    private void waitForGame() {
+        while(true){
+            if(clickedButton != 0){
+                boolean con = startGame(clickedButton);
+                if(!con)break;
+                else {
+                    clickedButton++;
+                    if(clickedButton > 4)clickedButton = 1;
+                }
+            }
+            pause(150);
         }
     }
 
-    private boolean gameOver(){
-        return !lives.isLive() || brickCount <= 0;
+    public void startMenu(){
+        scene = Scene.MENU;
+        menu = new Menu(getGCanvas());
+        menu.run();
+
+    }
+
+    public boolean startGame(int level){
+        game = new Game(getGCanvas());
+        scene = Scene.GAME;
+        game.setLevel(getLevel(level));
+        return game.run();
     }
 
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
-        plat.setLocation(mouseEvent.getX() - plat.getWidth() / 2,plat.getY());
+        if(scene == Scene.GAME)game.mouseMoved(mouseEvent);
     }
 
-    /**Figure situation than ball is colliding with brick*/
-    private void checkBrick(){
-        for(double addX = 0;addX <= ball.getBounds().getWidth(); addX += ball.getBounds().getWidth()){
-            for(double addY = 0;addY <= ball.getBounds().getWidth(); addY += ball.getBounds().getWidth()){
-                GObject elementAt = getElementAt(ball.getX1() + addX, ball.getY1() + addY);
-                if(!isBrick(elementAt))continue;
-                if(ball.checkRectCollision(elementAt,true)){
-                    removeBrick(elementAt);
-                    return;
-                }
+    @Override
+    public void mouseClicked(MouseEvent mouseEvent) {
+        if(scene == Scene.MENU){
+            int x = menu.mouseClicked(mouseEvent);
+            if(x != 0){
+                clickedButton = x;
             }
         }
     }
 
-    private void removeBrick(GObject brick){
-        SoundClip clip = new SoundClip("fx/woodTouch.wav");
-        clip.setVolume(0.5);
-        clip.play();
-        remove(brick);
-        brickCount--;
-        score.addToValue(100);
+    private BrickGenerator getLevel(int x){
+        if(x == 1)return level1;
+        if(x == 2)return level2;
+        if(x == 3)return level3;
+        if(x == 4)return level4;
+        return null;
     }
-
-    /**Figure situation than ball is colliding with platform*/
-    private void checkPlat() {
-        for(double addX = 0;addX <= ball.getBounds().getWidth(); addX += ball.getBounds().getWidth()){
-            for(double addY = 0;addY <= ball.getBounds().getWidth(); addY += ball.getBounds().getWidth()){
-                GObject elementAt = getElementAt(ball.getX1() + addX, ball.getY1() + addY);
-                if(elementAt == plat && ball.checkPlatCollision(elementAt)){
-                    plat.bounce(ball);
-                    return;
-                }
-            }
-        }
-    }
-
-    private boolean isBrick(GObject obj){
-        return obj != null && Math.abs(obj.getBounds().getWidth() - BRICK_WIDTH) < 1;
-        //return obj != back && obj != ball && obj != statisticBox && obj != plat && obj != null;
-    }
-
 }

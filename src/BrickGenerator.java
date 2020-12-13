@@ -5,10 +5,10 @@ public class BrickGenerator {
     public int brickCount;
 
     BrickGenerator(){
-        width = Main.BRICK_WIDTH;
-        height = Main.BRICK_HEIGHT;
-        x = Main.GAME_X1;
-        y = Main.GAME_Y1;
+        width = Game.BRICK_WIDTH;
+        height = Game.BRICK_HEIGHT;
+        x = Game.GAME_X1;
+        y = Game.GAME_Y1;
         brickCount = 0;
     }
 

@@ -1,6 +1,4 @@
-import acm.graphics.GImage;
-import acm.graphics.GObject;
-import acm.graphics.GOval;
+import acm.graphics.*;
 
 import java.awt.*;
 
@@ -87,33 +85,50 @@ public class Ball extends GImage {
      * Returns false if ball collide with window border and change velocity to keep ball inside window
      */
     public boolean checkWallCollision() {
-        if (getY2() >= Main.GAME_Y2) {
+        if (getY2() >= Game.GAME_Y2) {
             return true;
         }
-        if (getX1() <= Main.GAME_X1)
+        if (getX1() <= Game.GAME_X1)
             setVelocityX(-getVelocityX());
-        if (getY1() <= Main.GAME_Y1)
+        if (getY1() <= Game.GAME_Y1)
             setVelocityY(-getVelocityY());
-        if (getX2() >= Main.GAME_X2)
+        if (getX2() >= Game.GAME_X2)
             setVelocityX(-getVelocityX());
         return false;
 
     }
 
     /**
-     * Returns false if ball collide with brick and change velocity to jump ball out after brick collision
+     * Returns 0 if no collision
+     * Returns 1 if x collision
+     * Returns 2 if y collision
+     * @param changeXVelocity allow to change xVelocity
+     * @param changeYVelocity allow to change yVelocity
      */
-    public boolean checkRectCollision(GObject brick, boolean changeVelocity) {
+    public int checkRectCollision(GObject brick, boolean changeXVelocity, boolean changeYVelocity) {
         double x1 = brick.getBounds().getX(), x2 = x1 + brick.getBounds().getWidth();
         double y1 = brick.getBounds().getY(), y2 = y1 + brick.getBounds().getHeight();
-        move(-velocityX, -velocityY);
-        boolean isLeft = getCenterX() <= x1, isRight = getCenterX() >= x2, isUp = getCenterY() <= y1, isDown = getCenterY() >= y2;
-        move(velocityX, velocityY);
-        if (changeVelocity) {
-            if (isLeft || isRight) setVelocityX(-getVelocityX());
-            else if (isUp || isDown) setVelocityY(-getVelocityY());
+        GRectangle brickBounds = brick.getBounds();
+        boolean isLeft, isRight, isUp , isDown;
+        if(brickBounds.intersects(getBounds())){
+            move(-velocityX, -velocityY);
+            isLeft = getX2() - 5 <= x1;
+            isUp = getY2() - 5 <= y1;
+            isRight = getX1() + 5 >= x2;
+            isDown = getY1() + 5 >= y2;
+            move(velocityX, velocityY);
+        }else{
+            return 0;
         }
-        return isLeft || isRight || isUp || isDown;
+        if (changeYVelocity && (isDown || isUp)){
+            setVelocityY(-getVelocityY());
+        }else
+        if (changeXVelocity && (isLeft || isRight)){
+            setVelocityX(-getVelocityX());
+        }
+        if(isLeft || isRight)return 1;else
+        if(isDown || isUp)return 2;
+        return 0;
     }
 
     public boolean checkPlatCollision(GObject plat) {
