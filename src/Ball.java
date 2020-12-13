@@ -4,19 +4,23 @@ import acm.util.SoundClip;
 import java.awt.*;
 
 public class Ball extends GImage {
+    /**Velocity in x coordinates*/
     private double velocityX;
+    /**Velocity in y coordinates*/
     private double velocityY;
 
+    /**Start x position of ball*/
     private double startX;
+    /**Start y position of ball*/
     private double startY;
 
-    private int cnt = 1;
-
+    /**Constructor by path*/
     public Ball(String s) {
         super(s);
         startX = startY = 0;
     }
 
+    /**Constructor by path and coordinates*/
     public Ball(String s, double v, double v1) {
         super(s, v, v1);
         startX = v;
@@ -142,6 +146,7 @@ public class Ball extends GImage {
         return 0;
     }
 
+    /**Checks ball collision with platform*/
     public boolean checkPlatCollision(GObject plat) {
         double x1 = plat.getBounds().getX(), x2 = x1 + plat.getBounds().getWidth();
         double y1 = plat.getBounds().getY(), y2 = y1 + plat.getBounds().getHeight();
@@ -151,12 +156,14 @@ public class Ball extends GImage {
         return isUp;
     }
 
+    /**Respawns ball*/
     public void reSpawn(double magnitude){
         randomVelocity(magnitude);
         setLocation(startX,startY);
         pause(1000);
     }
 
+    /**Sets random direction to velocity*/
     public void randomVelocity(double magnitude){
         setVelocityX((Main.gen.nextBoolean() ? 1 : -1) * Main.gen.nextDouble(1,magnitude));
         setVelocityY(-Math.sqrt(magnitude * magnitude - velocityX * velocityX));

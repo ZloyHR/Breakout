@@ -3,8 +3,15 @@ import acm.graphics.GImage;
 import acm.graphics.GLabel;
 
 public class Button extends GCompound {
+    /**Button label*/
     GLabel text;
+    /**Button image*/
     GImage img;
+
+    /**Constructor
+     * @param s Image path
+     * @param text Button label
+     */
     public Button(String s,String text) {
         img = new GImage(s);
         //img.scale(0.75);

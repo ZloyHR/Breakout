@@ -9,17 +9,24 @@ import java.awt.event.MouseEvent;
 
 public class Menu {
 
+    /**Menu canvas*/
     GCanvas menuCanvas;
+
+    /**Level buttons*/
     Button level1 = new Button("img/Button.png","Level 1");
     Button level2 = new Button("img/Button.png","Level 2");
     Button level3 = new Button("img/Button.png","Level 3");
     Button level4 = new Button("img/Button.png","Level 4");
 
+    /**Constructor
+     * @param canvas Drawing canvas
+     */
     public Menu(GCanvas canvas) {
         canvas.removeAll();
         menuCanvas = canvas;
     }
 
+    /**Draws level buttons*/
     public void run(){
         GImage logo = new GImage("img/BREAKOUT.png");
         GImage back = new GImage("img/BackMenu.gif");
@@ -47,6 +54,7 @@ public class Menu {
         level4.setLocation(centerX + 1 * level1.getWidth() + 45,yHeight);
     }
 
+    /**Figure button clicks*/
     public int mouseClicked(MouseEvent mouseEvent) {
         GObject getElement = menuCanvas.getElementAt(mouseEvent.getX(),mouseEvent.getY());
         int ret = 0;
