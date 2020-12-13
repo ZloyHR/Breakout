@@ -175,12 +175,14 @@ public class Game {
     }
 
     private void removeBrick(GObject brick){
+        long y = Math.round((brick.getBounds().getY() - GAME_Y1) / BRICK_HEIGHT);
         gameCanvas.remove(brick);
         SoundClip clip = new SoundClip("fx/woodTouch.wav");
         clip.setVolume(0.5);
         clip.play();
         brickCount--;
-        score.addToValue(100);
+        y = (10 - y) / 2;
+        score.addToValue(y * 100);
     }
 
     /**Figure situation than ball is colliding with platform*/
