@@ -25,7 +25,7 @@ public class Game {
     public static double BRICK_HEIGHT = 25;
 
     /** Number of lives */
-    private static final int LIVES = 3;
+    private static final int LIVES = 1;
 
     private static final double BALL_VELOCITY = 2.5;
 
@@ -57,6 +57,12 @@ public class Game {
         gameCanvas = canvas;
     }
 
+    public void resetGame(){
+        score = new Score("Score : ",0);
+        time = new Time("",0);
+        lives = new Lives("",LIVES);
+    }
+
     /* Method: run() */
     /** Runs the Breakout program. */
     public boolean run() {
@@ -66,7 +72,7 @@ public class Game {
         gameCanvas.setSize(Main.APPLICATION_WIDTH,Main.APPLICATION_HEIGHT);
 
         back = new GImage("img/Back.png");
-        back.scale(gameCanvas.getWidth() / back.getWidth());
+        back.scale(gameCanvas.getWidth() / back.getWidth(),gameCanvas.getHeight() / back.getHeight());
         gameCanvas.add(back);
 
 
@@ -107,7 +113,8 @@ public class Game {
 
         BrickGenerator x = level;
         brickCount = x.generate(gameCanvas);
-        ball = new Ball("img/Blade1.png",(GAME_X2 + GAME_X1)/ 2 - 30,plat.getY1() - 60);
+        ball = new Ball("img/Ball.gif",(GAME_X2 + GAME_X1)/ 2 - 30,plat.getY1() - 60);
+        ball.scale(0.2);
         gameCanvas.add(ball);
         ball.reSpawn(BALL_VELOCITY);
 

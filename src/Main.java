@@ -30,14 +30,20 @@ public class Main extends GraphicsProgram {
 
     Menu menu;
     Game game;
+    EndGame endGame;
 
     Scene scene;
 
     private int clickedButton = 0;
+    private int toContinue = 0;
 
     @Override
     public void run() {
         instance = this;
+        SoundClip soundtrack = new SoundClip("fx/soundTrack.wav");
+        soundtrack.setVolume(0.2);
+        soundtrack.loop();
+        soundtrack.play();
         addMouseListeners();
         font = new Font(Font.SERIF,Font.PLAIN,24);
         Game.GAME_X2 = getWidth();
@@ -52,15 +58,21 @@ public class Main extends GraphicsProgram {
 
         startMenu();
 
-
-        waitForGame();
     }
 
     private void waitForGame() {
         while(true){
             if(clickedButton != 0){
                 boolean con = startGame(clickedButton);
-                if(!con)break;
+                if(!con) {
+                    if(endGame()){
+                        System.exit(0);
+                    }else{
+                        game.resetGame();
+                        startMenu();
+                    }
+                    break;
+                }
                 else {
                     clickedButton++;
                     if(clickedButton > 4)clickedButton = 1;
@@ -71,10 +83,11 @@ public class Main extends GraphicsProgram {
     }
 
     public void startMenu(){
+        clickedButton = toContinue = 0;
         scene = Scene.MENU;
         menu = new Menu(getGCanvas());
         menu.run();
-
+        waitForGame();
     }
 
     public boolean startGame(int level){
@@ -84,17 +97,34 @@ public class Main extends GraphicsProgram {
         return game.run();
     }
 
+    public boolean endGame(){
+        endGame = new EndGame(getGCanvas());
+        scene = Scene.END_GAME;
+        endGame.run();
+        while(true){
+            if(toContinue == 1)return false;
+            if(toContinue == 2)return true;
+            pause(150);
+        }
+    }
+
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
         if(scene == Scene.GAME)game.mouseMoved(mouseEvent);
     }
 
     @Override
-    public void mouseClicked(MouseEvent mouseEvent) {
+    public void mouseReleased(MouseEvent mouseEvent) {
         if(scene == Scene.MENU){
             int x = menu.mouseClicked(mouseEvent);
             if(x != 0){
                 clickedButton = x;
+            }
+        }
+        if(scene == Scene.END_GAME){
+            int x = endGame.mouseClicked(mouseEvent);
+            if(x != 0){
+                toContinue = x;
             }
         }
     }

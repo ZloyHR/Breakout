@@ -1,4 +1,5 @@
 import acm.graphics.*;
+import acm.util.SoundClip;
 
 import java.awt.*;
 
@@ -25,9 +26,9 @@ public class Ball extends GImage {
     /** Move ball by it's velocity*/
     public void moveByVelocity() {
         move(velocityX, velocityY);
-        setImage("img/Blade" + cnt + ".png");
-        cnt++;
-        if(cnt == 5)cnt = 1;
+//        setImage("img/Blade" + cnt + ".png");
+//        cnt++;
+//        if(cnt == 5)cnt = 1;
     }
 
     /**Returns xVelocity of ball*/
@@ -80,6 +81,8 @@ public class Ball extends GImage {
         velocityY *= scale;
     }
 
+    SoundClip clip = new SoundClip("fx/stoneTouch.wav");
+
     /**
      * Returns true if ball under the window
      * Returns false if ball collide with window border and change velocity to keep ball inside window
@@ -88,12 +91,24 @@ public class Ball extends GImage {
         if (getY2() >= Game.GAME_Y2) {
             return true;
         }
-        if (getX1() <= Game.GAME_X1)
+        boolean play = false;
+        if (getX1() <= Game.GAME_X1){
             setVelocityX(-getVelocityX());
-        if (getY1() <= Game.GAME_Y1)
+            play = true;
+        }
+        if (getY1() <= Game.GAME_Y1) {
             setVelocityY(-getVelocityY());
-        if (getX2() >= Game.GAME_X2)
+            play = true;
+        }
+        if (getX2() >= Game.GAME_X2) {
             setVelocityX(-getVelocityX());
+            play = true;
+        }
+        if(play) {
+            clip.stop();
+            clip.setVolume(0.5);
+            clip.play();
+        }
         return false;
 
     }
